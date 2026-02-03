@@ -94,11 +94,12 @@ yesBtn.addEventListener('click', () => {
   } else if(state === 1){
     message.textContent = 'Je bent niet zeker denk ik';
     state = 2;
-    yesBtn.textContent = 'Jawel 😍'; // tekst aanpassen hier
+    yesBtn.textContent = 'Jawel 😍'; // alleen hier
   } else if(state === 2){
     message.textContent = 'ik ga je billen bijten';
     state = 3;
     noBtn.textContent = 'ieuw neen';
+    yesBtn.textContent = 'Ja 😍'; // terug naar normaal
   }
 });
 
