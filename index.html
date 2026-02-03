@@ -20,19 +20,17 @@
     border-radius: 20px;
     text-align: center;
     box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-    max-width: 420px;
-    width: 90%;
+    width: 400px;
+    height: 300px;
     position: relative;
   }
   h1 { margin-bottom: 10px; }
   p { margin-top: 0; opacity: .8; }
-  .buttons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 25px;
+  #buttons {
     position: relative;
-    height: 50px; /* ruimte voor absolute positionering */
+    width: 100%;
+    height: 50px;
+    margin-top: 25px;
   }
   button {
     padding: 12px 22px;
@@ -41,23 +39,23 @@
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.2s ease;
-    position: relative;
+    position: absolute;
+    top: 0;
   }
-  #yes { background: #4caf50; color: white; }
-  #no { background: #f44336; color: white; position: absolute; top: 0; left: 50%; transform: translateX(-50%); }
-  #message { margin-top: 22px; font-size: 20px; min-height: 1.4em; }
+  #yes { background: #4caf50; color: white; left: 30%; }
+  #no { background: #f44336; color: white; left: 60%; }
+  #message { margin-top: 22px; font-size: 18px; min-height: 24px; }
 </style>
 </head>
 <body>
+
 <div class="card">
   <h1 id="question">Dilos wil je mijn Valentijn zijn? 💖</h1>
   <p id="sub">(antwoord eerlijk 😌)</p>
-
-  <div class="buttons" id="buttons">
+  <div id="buttons">
     <button id="yes">Ja 😍</button>
     <button id="no">Nee 🙄</button>
   </div>
-
   <div id="message"></div>
 </div>
 
@@ -68,13 +66,13 @@ const message = document.getElementById('message');
 const question = document.getElementById('question');
 const sub = document.getElementById('sub');
 const buttons = document.getElementById('buttons');
+const card = document.querySelector('.card');
 
-let state = 0; // startstate
-let canClickNo = false; // Nee knop eerst niet klikbaar
+let state = 0;
+let canClickNo = false;
 
-// functie om de "Nee"-knop te laten bewegen
-function moveNoWithinCard() {
-  const card = document.querySelector('.card');
+// Functie om "Nee" knop te verplaatsen binnen de kaart
+function moveNo() {
   const cardRect = card.getBoundingClientRect();
   const btnRect = noBtn.getBoundingClientRect();
   const padding = 10;
@@ -86,20 +84,21 @@ function moveNoWithinCard() {
   noBtn.style.top = y + "px";
 }
 
-// Eerste 5 seconden: Nee-knop beweegt
-const noInterval = setInterval(() => {
-  if (!canClickNo) moveNoWithinCard();
-}, 300);
+// Laat de knop de eerste 5 seconden bewegen
+const interval = setInterval(() => {
+  if (!canClickNo) moveNo();
+}, 200);
 
-// na 5 seconden mag je op Nee klikken
+// Na 5 seconden mag je op nee klikken
 setTimeout(() => {
   canClickNo = true;
-  clearInterval(noInterval);
+  clearInterval(interval);
 }, 5000);
 
-// Event listener Nee-knop
+// Event listener Nee
 noBtn.addEventListener('click', () => {
-  if (!canClickNo) return; // nog niet klikbaar
+  if (!canClickNo) return;
+
   if (state === 0) {
     message.textContent = 'eminmisin?';
     state = 1;
@@ -115,7 +114,7 @@ noBtn.addEventListener('click', () => {
   }
 });
 
-// Event listener Ja-knop
+// Event listener Ja
 yesBtn.addEventListener('click', () => {
   if (state === 0) {
     message.textContent = 'yerim seniiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.';
@@ -127,14 +126,12 @@ yesBtn.addEventListener('click', () => {
   } else if (state === 2) {
     message.textContent = 'ik je billen bijten';
     state = 3;
-    moveNoWithinCard();
   } else if (state === 3) {
     message.textContent = 'kafayaaaaaaaaaaaaaaaa bak, beter druk je niet meer op nee';
     state = 4;
-    moveNoWithinCard();
   } else if (state === 4) {
-    state = 5;
     finalOnlyYes();
+    state = 5;
   }
 });
 
@@ -152,10 +149,10 @@ function yesFinal() {
   buttons.style.display = 'none';
 }
 
-// disable Nee-knop
 function disableNo() {
   noBtn.style.display = 'none';
 }
 </script>
+
 </body>
 </html>
