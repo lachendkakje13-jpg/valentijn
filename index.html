@@ -69,10 +69,10 @@
 const yesBtn = document.getElementById('yes');
 const noBtn = document.getElementById('no');
 const message = document.getElementById('message');
-const card = document.querySelector('.card');
 const buttons = document.getElementById('buttons');
+const card = document.querySelector('.card');
 
-let state = 0; // start
+let state = 0;
 let canClickNo = false; // Nee eerst niet klikbaar
 
 // ---- Beweeg Nee knop de eerste 5 seconden ----
@@ -94,6 +94,7 @@ yesBtn.addEventListener('click', () => {
   } else if(state === 1){
     message.textContent = 'Je bent niet zeker denk ik';
     state = 2;
+    yesBtn.textContent = 'Jawel 😍'; // tekst aanpassen hier
   } else if(state === 2){
     message.textContent = 'ik ga je billen bijten';
     state = 3;
