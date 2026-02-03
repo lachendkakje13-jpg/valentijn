@@ -21,6 +21,7 @@
     text-align: center;
     box-shadow: 0 20px 40px rgba(0,0,0,0.15);
     width: 420px;
+    height: 300px;
     position: relative;
   }
   h1 { margin-bottom: 10px; }
@@ -28,6 +29,7 @@
   #buttons {
     margin-top: 25px;
     position: relative;
+    width: 100%;
     height: 50px;
   }
   button {
@@ -67,41 +69,23 @@
 const yesBtn = document.getElementById('yes');
 const noBtn = document.getElementById('no');
 const message = document.getElementById('message');
-const buttons = document.getElementById('buttons');
 const card = document.querySelector('.card');
+const buttons = document.getElementById('buttons');
 
-let state = 0;
-let canClickNo = false; // Nee kan eerst niet klikken
+let state = 0; // start
+let canClickNo = false; // Nee eerst niet klikbaar
 
-/*
-States:
-0 = start
-1 = eminmisin?
-2 = Je bent niet zeker denk ik
-3 = ik ga je billen bijten (Nee wordt ieuw neen tijdelijk)
-4 = kafayaaaaaaaa...
-5 = final (alleen Ja)
-*/
-
-// ---- Beweeg Nee knop 5 seconden ----
+// ---- Beweeg Nee knop de eerste 5 seconden ----
 function moveNo() {
   const cardRect = card.getBoundingClientRect();
   const btnRect = noBtn.getBoundingClientRect();
-  const padding = 10;
-  const x = Math.random() * (cardRect.width - btnRect.width - padding);
-  const y = Math.random() * (cardRect.height - btnRect.height - padding);
+  const x = Math.random() * (cardRect.width - btnRect.width - 20);
+  const y = Math.random() * (cardRect.height - btnRect.height - 20);
   noBtn.style.left = x + "px";
   noBtn.style.top = y + "px";
 }
-
-const interval = setInterval(() => {
-  if(!canClickNo) moveNo();
-}, 200);
-
-setTimeout(() => {
-  canClickNo = true;
-  clearInterval(interval);
-}, 5000);
+const interval = setInterval(() => { if(!canClickNo) moveNo(); }, 200);
+setTimeout(() => { canClickNo = true; clearInterval(interval); }, 5000);
 
 // ---- JA knop ----
 yesBtn.addEventListener('click', () => {
@@ -112,8 +96,8 @@ yesBtn.addEventListener('click', () => {
     state = 2;
   } else if(state === 2){
     message.textContent = 'ik ga je billen bijten';
-    noBtn.textContent = 'ieuw neen';
     state = 3;
+    noBtn.textContent = 'ieuw neen';
   }
 });
 
@@ -131,7 +115,7 @@ noBtn.addEventListener('click', () => {
       break;
     case 3:
       message.textContent = 'kafayaaaaaaaaaaaaaaaa bak, beter druk je niet meer op nee';
-      noBtn.textContent = 'Nee 🙄'; // terug naar normaal voor volgende klik
+      noBtn.textContent = 'Nee 🙄'; // terug naar normaal
       state = 4;
       break;
     case 4:
@@ -141,7 +125,7 @@ noBtn.addEventListener('click', () => {
   }
 });
 
-// ---- Laat alleen JA over ----
+// ---- Laat alleen JA knop over ----
 function finalOnlyYes(){
   message.textContent = 'je gaat gewoon ja zeggen klaar';
   buttons.innerHTML = `<button id="yesOnly">Ja 😍</button>`;
