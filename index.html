@@ -64,44 +64,64 @@
     const sub = document.getElementById('sub');
     const buttons = document.getElementById('buttons');
 
-    let noCount = 0;
+    // states
+    // 0: start
+    // 1: after first NO (eminmisin?)
+    // 2: after YES from state 1 (Je bent niet zeker denk ik)
+    // 3: after NO from state 2 (ik je billen bijten)
+    // 4: after another NO (kafayaaaaaaaaa...)
+    // 5: final (only YES)
+    let state = 0;
 
-    const noMessages = [
-      'eminmisin?',
-      'Je bent niet zeker denk ik',
-      'zeg gwn jaaaa',
-      'ik je billen bijten',
-      'je gaat gewoon ja zeggen klaar.'
-    ];
+    function moveNoWithinCard() {
+      const card = document.querySelector('.card');
+      const cardRect = card.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+      const maxX = cardRect.width - btnRect.width - 40;
+      const maxY = cardRect.height - btnRect.height - 40;
+      const x = Math.random() * maxX - maxX / 2;
+      const y = Math.random() * maxY - maxY / 2;
+      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    }
 
-    noBtn.addEventListener('click', () => {
-      if (noCount < noMessages.length) {
-        message.textContent = noMessages[noCount];
-        noCount++;
-      }
+    function finalOnlyYes() {
+      message.textContent = 'je gaat gewoon ja zeggen klaar.';
+      buttons.innerHTML = '<button id="yesOnly" style="padding:14px 26px;font-size:18px;border:none;border-radius:12px;background:#4caf50;color:#fff;cursor:pointer;">Ja 😍</button>';
+      document.getElementById('yesOnly').addEventListener('click', yesFinal);
+    }
 
-      // kleine dodge tot de laatste stap
-      if (noCount < noMessages.length) {
-        const x = Math.random() * 160 - 80;
-        const y = Math.random() * 160 - 80;
-        noBtn.style.transform = `translate(${x}px, ${y}px)`;
-      }
-
-      // laatste stap: alleen YES
-      if (noCount === noMessages.length) {
-        buttons.innerHTML = '<button id="yesOnly" style="padding:14px 26px;font-size:18px;border:none;border-radius:12px;background:#4caf50;color:#fff;cursor:pointer;">Ja 😍</button>';
-        document.getElementById('yesOnly').addEventListener('click', yesClick);
-      }
-    });
-
-    function yesClick() {
+    function yesFinal() {
       question.textContent = '💘';
       sub.textContent = '';
       message.textContent = 'yerim seniiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii.';
       buttons.style.display = 'none';
     }
 
-    yesBtn.addEventListener('click', yesClick);
+    yesBtn.addEventListener('click', () => {
+      if (state === 0) {
+        // direct yes
+        yesFinal();
+      } else if (state === 1) {
+        // no after eminmisin? → meteen eindigen
+        yesFinal();
+      } else if (state === 1) {
+        // no instead of yes after eminmisin?
+        message.textContent = 'Tmm beter, hadi klik op ja';
+        moveNoWithinCard();
+      } else if (state === 2) {
+        // no after "Je bent niet zeker denk ik"
+        message.textContent = 'ik je billen bijten';
+        state = 3;
+        moveNoWithinCard();
+      } else if (state === 3) {
+        message.textContent = 'kafayaaaaaaaaaaaaaaaa bak, beter druk je niet meer op nee';
+        state = 4;
+        moveNoWithinCard();
+      } else if (state === 4) {
+        state = 5;
+        finalOnlyYes();
+      }
+    });
   </script>
 </body>
 </html>
