@@ -72,42 +72,47 @@ let state = 0;
 0 = start
 1 = eminmisin?
 2 = Je bent niet zeker denk ik
-3 = ik ga je billen bijten (nee = ieuw neen)
+3 = ik ga je billen bijten ("ieuw neen")
 4 = kafayaaaaaaaa...
 5 = final (alleen ja)
 */
 
 // JA knop
 yesBtn.addEventListener('click', () => {
-  if(state === 0){
+  if (state === 0) {
     endLove();
-  } else if(state === 1){
+  } else if (state === 1) {
     message.textContent = 'Je bent niet zeker denk ik';
     state = 2;
-  } else if(state === 2){
+  } else if (state === 2) {
     message.textContent = 'ik ga je billen bijten';
-    noBtn.textContent = 'ieuw neen';
     state = 3;
+    noBtn.textContent = 'ieuw neen'; // verander tekst
   }
 });
 
 // NEE knop
 noBtn.addEventListener('click', () => {
-  if(state === 0){
-    message.textContent = 'eminmisin?';
-    state = 1;
-  } else if(state === 1){
-    message.textContent = 'Tmm beter, hadi klik op ja';
-  } else if(state === 3){
-    message.textContent = 'kafayaaaaaaaaaaaaaaaa bak, beter druk je niet meer op nee';
-    state = 4;
-  } else if(state === 4){
-    finalOnlyYes();
-    state = 5;
+  switch(state){
+    case 0:
+      message.textContent = 'eminmisin?';
+      state = 1;
+      break;
+    case 1:
+      message.textContent = 'Tmm beter, hadi klik op ja';
+      break;
+    case 3:
+      message.textContent = 'kafayaaaaaaaaaaaaaaaa bak, beter druk je niet meer op nee';
+      state = 4;
+      break;
+    case 4:
+      finalOnlyYes();
+      state = 5;
+      break;
   }
 });
 
-// Laat alleen JA knop over
+// Laat alleen JA over
 function finalOnlyYes(){
   message.textContent = 'je gaat gewoon ja zeggen klaar';
   buttons.innerHTML = `<button id="yesOnly">Ja 😍</button>`;
